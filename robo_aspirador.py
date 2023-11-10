@@ -1,46 +1,46 @@
-import random
+mport random
 import time
 
-def display(room):
-    for row in room:
-        print(row)
+def exibir_quarto(quarto):
+    for linha in quarto:
+        print(linha)
 
-room = [
+quarto = [
     ['1', '2', '3', '4'],
     ['5', '6', '7', '8'],
     ['9', '10', '11', '12'],
     ['13', '14', '15', '16'],
 ]
 
-print("Esse é o array que identifica as posições do quarto")
-display(room)
+print("Este é o array que identifica as posições do quarto:")
+exibir_quarto(quarto)
 
 x = 0
 y = 0
 
 while x < 4:
     while y < 4:
-        room[x][y] = random.choice(['Clean', 'dirty'])
+        quarto[x][y] = random.choice(['Limpo', 'Sujo'])
         y += 1
     x += 1
     y = 0
 
-print("Foram detectados alguns pontos sujos:")
-display(room)
+print("Alguns pontos sujos foram detectados:")
+exibir_quarto(quarto)
 
 x = 0
 y = 0
 z = 0
-cleaned_positions = []
+posicoes_limpas = []
 
 # Capacidade máxima da bolsa e pontos de energia iniciais
 capacidade_bolsa = 10
 bolsa = 0
 pontos_energia = 100
 localizacao = 'A'
-base_location = None  # Localização da base (A) para esvaziar a bolsa
+base_localizacao = None  # Localização da base (A) para esvaziar a bolsa
 
-# Definir uma ordem de visita a partir de 'A' até 'P'
+# Definir uma ordem de visita de 'A' até 'P'
 ordem_visita = [chr(i) for i in range(ord('A'), ord('P') + 1)]
 proxima_posicao = 0
 
@@ -58,12 +58,12 @@ while proxima_posicao < len(ordem_visita):
         # Atualiza a localização
         localizacao = posicao_atual
 
-    if 0 <= x < 4 and 0 <= y < 4 and room[x][y] == 'dirty':
+    if 0 <= x < 4 and 0 <= y < 4 and quarto[x][y] == 'Sujo':
         print(f"Limpando em: ({posicao_atual}, {x})")
         time.sleep(1)  # Simula o tempo para limpar
-        room[x][y] = 'Clean'
-        print(f"Clean ({posicao_atual}, {x})")
-        cleaned_positions.append((posicao_atual, y))
+        quarto[x][y] = 'Limpo'
+        print(f"Limpo ({posicao_atual}, {x})")
+        posicoes_limpas.append((posicao_atual, y))
         z += 1
         bolsa += 1
         pontos_energia -= 1  # Deduz 1 ponto de energia
@@ -74,7 +74,7 @@ while proxima_posicao < len(ordem_visita):
             print("Bolsa esvaziada.")
             bolsa = 0  # Esvazia a bolsa
             pontos_energia -= 1  # Deduz 1 ponto de energia pela viagem de retorno
-            base_location = localizacao
+            base_localizacao = localizacao
 
     proxima_posicao += 1
     y += 1
@@ -84,23 +84,18 @@ while proxima_posicao < len(ordem_visita):
         x += 1
 
 # Após limpar tudo, voltar à base se necessário
-if base_location:
-    dx = ord(base_location) - ord(localizacao)
-    dy = ord(base_location) - ord(localizacao)
+if base_localizacao:
+    dx = ord(base_localizacao) - ord(localizacao)
+    dy = ord(base_localizacao) - ord(localizacao)
     pontos_energia -= abs(dx) + abs(dy)
-    localizacao = base_location
+    localizacao = base_localizacao
     print("Voltando à base para finalizar.")
     time.sleep(1)  # Simula o tempo para voltar à base
     print("Bolsa esvaziada na base.")
-    base_location = None
+    base_localizacao = None
 
-pro = (100 - ((z / 16) * 100))
-print("Quarto está limpo agora")
-display(room)
-print('Performance =', pro, '%')
-print('Pontos de energia usados:', 100 - pontos_energia)  # Calcula os pontos de energia usados
+
 
 print("Locais limpos:")
-for position in cleaned_positions:
-    print(f"({position[0]} ({position[1]})", end=', ')
-print()
+for posicao in posicoes_limpas:
+    print(f"({posicao[0]} ({posicao[1]})", end=', ')
